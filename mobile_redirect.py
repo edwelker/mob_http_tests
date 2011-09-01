@@ -54,6 +54,61 @@ class TestPubMedMobileRedirect(unittest.TestCase):
     def test_std_serach_with_std_flag(self):
         self.history_test( '/pubmed?term=whale&p$mobile=true&ncbi_mmode=std', '/pubmed?term=whale', self.mob_cookie)
 
+    def test_std_abstract_with_std_flag(self):
+        self.history_test('/pubmed/18590863?ncbi_mmode=std&p$mobile=true', '/pubmed/18590863', self.mob_cookie)
+
+    def test_std_link_with_std_flag(self):
+        self.history_test('/pubmed?cmd=link&ncbi_mmode=std&linkname=pubmed_pubmed&p$mobile=true&uid=17328369',
+                            '/pubmed?cmd=link&linkname=pubmed_pubmed&uid=17328369',
+                            self.mob_cookie)
+
+#test mobile urls with standard cookie
+    def test_mob_homepage_with_mobile_cookie(self):
+        self.history_test('/m/pubmed/?p$mobile=true', '/pubmed/', self.std_cookie)
+
+    def test_mob_abstract_with_mobile_cookie(self):
+        self.history_test('/m/pubmed/18066186/?p$mobile=true', '/pubmed/18066186/', self.std_cookie)
+
+    def test_mob_search_with_mobile_cookie(self):
+        self.history_test('/m/pubmed/?term=shostakovich&p$mobile=true', '/pubmed/?term=shostakovich', self.std_cookie)
+
+    def test_mob_link_with_mobile_cookie(self):
+        self.history_test('/m/pubmed/123456/related/', '/pubmed/?cmd=link&linkname=pubmed_pubmed&uid=123456', self.std_cookie)
+
+
+    def test_std_homepage_with_standard_flag_and_cookie(self):
+        loc = '/pubmed?p$mobile=true&ncbi_mmode=std'
+        self.routing_rule_test(loc)
+
+    def test_std_serach_with_std_flag_and_cookie(self):
+        loc = '/pubmed?term=whale&p$mobile=true&ncbi_mmode=std'
+        self.routing_rule_test(loc)
+
+    def test_std_abstract_with_std_flag_and_cookie(self):
+        loc = '/pubmed/18590863?ncbi_mmode=std&p$mobile=true'
+        self.routing_rule_test(loc)
+
+    def test_std_link_with_std_flag_and_cookie(self):
+        loc = '/pubmed?cmd=link&ncbi_mmode=std&linkname=pubmed_pubmed&p$mobile=true&uid=17328369'
+        self.routing_rule_test(loc)
+
+
+    def test_std_homepage_with_standard_cookie(self):
+        loc = '/pubmed?p$mobile=true'
+        self.routing_rule_test(loc)
+
+    def test_std_serach_with_std_cookie(self):
+        loc = '/pubmed?term=whale&p$mobile=true'
+        self.routing_rule_test(loc)
+
+    def test_std_abstract_with_std_cookie(self):
+        loc = '/pubmed/18590863?p$mobile=true'
+        self.routing_rule_test(loc)
+
+    def test_std_link_with_std_cookie(self):
+        loc = '/pubmed?cmd=link&linkname=pubmed_pubmed&p$mobile=true&uid=17328369'
+        self.routing_rule_test(loc)
+
 
     #class helper methods
     def history_test(self, inurl, expectedurl, cookies=None ):
@@ -70,10 +125,18 @@ class TestPubMedMobileRedirect(unittest.TestCase):
         if re.search( r'p\$mobile\=true', location):
             location = self.strip_test_querystringparams(location)
 
+        if re.search( r'ncbi.nlm.nih.gov', location):
+            location = self.strip_host(location)
+
         self.assertEqual( location, expectedurl)
 
-    def getpage(self, url):
-        return requests.get( urljoin(self.baseurl, url) )
+    def routing_rule_test(self, loc):
+        page = self.getpage(loc, self.std_cookie)
+        self.assertEqual(page.status_code, 200)
+        self.assertEqual(self.strip_host(page.url), loc)
+
+    def getpage(self, url, cookies=None):
+        return requests.get( urljoin(self.baseurl, url), cookies=cookies )
 
     def strip_test_querystringparams(self, location):
         scheme, netloc, path, query, fragment = urlsplit(location)
@@ -83,9 +146,12 @@ class TestPubMedMobileRedirect(unittest.TestCase):
                 qs.remove(x)
         
         qs = urlencode(qs)
-
         return urlunsplit((scheme, netloc, path, qs, fragment))
 
+    def strip_host(self, location):
+        s, n, p, q, f = urlsplit(location)
+        s = n = ''
+        return urlunsplit((s, n, p, q, f))
 
 
 if __name__ == '__main__':
