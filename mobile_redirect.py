@@ -1,5 +1,10 @@
 #!/usr/bin/env python
-#! encoding: utf-8
+# encoding: utf-8
+"""
+Tests for PubMed Mobile redirect.
+
+Eddie Welker, Aug 31, 2011
+"""
 
 import requests
 from urlparse import urljoin, parse_qsl, urlsplit, urlunsplit
@@ -132,6 +137,25 @@ class TestPubMedMobileRedirect(unittest.TestCase):
         loc = '/m/pubmed/123456/related/'
         self.routing_rule_test(loc, self.mob_cookie)
 
+#mobile urls with no cookie
+    def test_mob_homepage(self):
+        loc = '/m/pubmed/?p$mobile=true'
+        self.routing_rule_test(loc, None)
+
+    def test_mob_abstract(self):
+        loc = '/m/pubmed/18066186/?p$mobile=true'
+        self.routing_rule_test(loc, None)
+
+    def test_mob_search(self):
+        loc = '/m/pubmed/?term=shostakovich&p$mobile=true'
+        self.routing_rule_test(loc, None)
+
+    def test_mob_link(self):
+        loc = '/m/pubmed/123456/related/'
+        self.routing_rule_test(loc, None)
+
+
+
 
 
     #class helper methods
@@ -179,5 +203,6 @@ class TestPubMedMobileRedirect(unittest.TestCase):
 
 
 if __name__ == '__main__':
+
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPubMedMobileRedirect)
     unittest.TextTestRunner(verbosity=2).run(suite)
