@@ -107,16 +107,20 @@ class TestPubMedMobileRedirect(unittest.TestCase):
 
 #test mobile urls with standard cookie
     def test_mob_homepage_with_std_cookie(self):
-        self.history_test('/m/pubmed/?p$mobile=true', '/pubmed/', self.std_cookie)
+        loc = '/m/pubmed/?p$mobile=true'
+        self.routing_rule_test(loc, self.std_cookie)
 
     def test_mob_abstract_with_std_cookie(self):
-        self.history_test('/m/pubmed/18066186/?p$mobile=true', '/pubmed/18066186/', self.std_cookie)
+        loc = '/m/pubmed/18066186/?p$mobile=true'
+        self.routing_rule_test(loc, self.std_cookie)
 
     def test_mob_search_with_std_cookie(self):
-        self.history_test('/m/pubmed/?term=shostakovich&p$mobile=true', '/pubmed/?term=shostakovich', self.std_cookie)
+        loc = '/m/pubmed/?term=shostakovich&p$mobile=true'
+        self.routing_rule_test(loc, self.std_cookie)
 
     def test_mob_link_with_std_cookie(self):
-        self.history_test('/m/pubmed/123456/related/', '/pubmed/?cmd=link&linkname=pubmed_pubmed&uid=123456', self.std_cookie)
+        loc = '/m/pubmed/123456/related/'
+        self.routing_rule_test(loc, self.std_cookie)
 
 
 
