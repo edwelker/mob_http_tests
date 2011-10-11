@@ -134,7 +134,7 @@ class TestPubMedMobileRedirect(unittest.TestCase):
         self.routing_rule_test(loc, self.mob_cookie)
 
     def test_mob_search_with_mobile_cookie(self):
-        loc = '/m/pubmed/?term=shostakovich&p$mobile=true'
+        loc = '/m/pubmed/?term=breast+cancer&p$mobile=true'
         self.routing_rule_test(loc, self.mob_cookie)
 
     def test_mob_link_with_mobile_cookie(self):
@@ -151,7 +151,7 @@ class TestPubMedMobileRedirect(unittest.TestCase):
         self.routing_rule_test(loc, None)
 
     def test_mob_search(self):
-        loc = '/m/pubmed/?term=shostakovich&p$mobile=true'
+        loc = '/m/pubmed/?term=breast cancer&p$mobile=true'
         self.routing_rule_test(loc, None)
 
     def test_mob_link(self):
