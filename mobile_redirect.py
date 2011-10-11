@@ -30,11 +30,11 @@ class TestPubMedMobileRedirect(unittest.TestCase):
         self.history_test( '/pubmed/17328369?p$mobile=true', '/m/pubmed/17328369/')
 
     def test_std_search_with_mobile_emulation(self):
-        self.history_test( '/pubmed?term=cat&p$mobile=true', '/m/pubmed/?term=cat')
+        self.history_test( '/pubmed?term=breast+cancer&p$mobile=true', '/m/pubmed/?term=breast+cancer')
 
     #no, order doesn't matter, unless you're testing regular expressions too
     def test_std_search_with_mobile_emulation_queryparams_reversed(self):
-        self.history_test('/pubmed?p$mobile=true&term=cat', '/m/pubmed/?term=cat')
+        self.history_test('/pubmed?p$mobile=true&term=breast+cancer', '/m/pubmed/?term=breast+cancer')
 
     def test_std_link_with_mobile_emulation(self):
         self.history_test( '/pubmed?cmd=link&linkname=pubmed_pubmed&uid=18590863&p$mobile=true', '/m/pubmed/18590863/related/')
