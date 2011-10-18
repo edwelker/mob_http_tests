@@ -36,6 +36,24 @@ class TestPubMedMobileRedirect(unittest.TestCase):
     def test_std_search_with_mobile_emulation_queryparams_reversed(self):
         self.history_test('/pubmed?p$mobile=true&term=breast+cancer', '/m/pubmed/?term=breast+cancer')
 
+    #for whatever reason, both python and curl do not encode the spaces before sending,
+    #so you've gotta do that manually for each request.
+
+    #to test, curl -vIL will do a head request and follow a 303
+    #curl doesn't encode the spaces either, tho
+
+    def test_two_word_search_with_mobile_emulation(self):
+        self.history_test('/pubmed?p$mobile=true&term=heart%20attack', '/m/pubmed/?term=heart+attack')
+
+    def test_two_word_search_encoded_with_mobile_emulation(self):
+        self.history_test('/pubmed?p$mobile=true&term=brca1%20brca2', '/m/pubmed/?term=brca1+brca2')
+
+    def test_three_word_search_with_mobile_emulation(self):
+        self.history_test('/pubmed?p$mobile=true&term=asprin%20heart%20attack', '/m/pubmed/?term=asprin+heart+attack')
+
+    def test_three_word_search_encoded_with_mobile_emulation(self):
+        self.history_test('/pubmed?p$mobile=true&term=breast%20cancer%20brca1', '/m/pubmed/?term=breast+cancer+brca1')
+
     def test_std_link_with_mobile_emulation(self):
         self.history_test( '/pubmed?cmd=link&linkname=pubmed_pubmed&uid=18590863&p$mobile=true', '/m/pubmed/18590863/related/')
 
