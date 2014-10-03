@@ -20,7 +20,6 @@ try:
     from mobile_redirect import TestPubMedMobileRedirect
     import unittest
 
-    
     form = cgi.FieldStorage()
     port = form.getvalue('port')
     port = "http://%s.ncbi.nlm.nih.gov" % port
@@ -33,5 +32,3 @@ try:
     unittest.TextTestRunner(stream=sys.stdout, verbosity=2).run(suite)
 except:
     print "An error has occured running the mobile_redirect tests"
-
-
