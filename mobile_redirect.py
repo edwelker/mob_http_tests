@@ -11,6 +11,8 @@ from urlparse import urljoin, parse_qsl, urlsplit, urlunsplit
 import unittest
 import re
 from urllib import urlencode, unquote
+import sys
+import getopt
 
 class TestPubMedMobileRedirect(unittest.TestCase):
 
@@ -169,6 +171,19 @@ class TestPubMedMobileRedirect(unittest.TestCase):
     def test_mob_link(self):
         loc = '/m/pubmed/123456/related/'
         self.routing_rule_test(loc, None)
+        
+#test /pubmed/trending doesn't redirect to the mobile site 
+    def test_trending_no_cookie(self):
+        loc = '/pubmed/trending'
+        self.routing_rule_test(loc,None)
+        
+    def test_trending_with_cookie(self):
+        loc = '/pubmed/trending'
+        self.routing_rule_test(loc,self.mob_cookie)
+        
+    def test_trending_with_cookie(self):
+        loc = '/pubmed/trending'
+        self.routing_rule_test(loc,self.std_cookie)
 
 
 
@@ -219,6 +234,15 @@ class TestPubMedMobileRedirect(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    
+    try:
+        opts, args = getopt.getopt(sys.argv[1:],"p:",["port="])
+        for opt, arg in opts:
+            if opt in ("-p", "--port"):
+                if arg in ['dev','test','try','qa','preview','www']:
+                    TestPubMedMobileRedirect.baseurl = 'http://' + arg + '.ncbi.nlm.nih.gov/'
+    except Exception as e:
+        pass
 
     suite = unittest.TestLoader().loadTestsFromTestCase(TestPubMedMobileRedirect)
     unittest.TextTestRunner(verbosity=2).run(suite)
